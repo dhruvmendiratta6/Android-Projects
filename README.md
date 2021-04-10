@@ -7,3 +7,6 @@ A messaging app which can be used to share texts and images. Firebase used as ba
 
 ### Pets App
 An app to keep track of pets in a shelter home.
+
+### Booker
+An app to find books. Books can be searched using author name or the title. Data taken from google books api (https://www.googleapis.com/books/v1/volumes)
