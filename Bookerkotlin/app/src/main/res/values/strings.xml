@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Booker-kotlin</string>
+    <string name="edit_text_hint">Search Books</string>
+    <string name="settings_title">Settings</string>
+    <string name="list_pref_key">listPref</string>
+    <string name="author_pref">Author</string>
+    <string name="title_pref">Title</string>
+</resources>
