@@ -1,6 +1,5 @@
 package com.example.booker_kotlin
 
-import android.app.Activity
 import android.content.Intent
 import android.content.SharedPreferences
 import android.net.ConnectivityManager
@@ -10,80 +9,74 @@ import android.preference.PreferenceManager
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ListView
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import okhttp3.HttpUrl
-import java.lang.ref.WeakReference
+import androidx.lifecycle.ViewModelProvider
 
 class MainActivity : AppCompatActivity() {
-    private var bookListView: ListView? = null
+    private lateinit var bookListView: ListView
+    private lateinit var viewModel: BookViewModel
+    private lateinit var loadingIndicator: ProgressBar
+    private lateinit var noBooksText: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
+//        TODO("make condition for BookApiServiceeModel.totalItems")
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        viewModel = ViewModelProvider(this).get(BookViewModel::class.java)
+
+        viewModel.bookList.observe(this){ bookList ->
+            setAdapter(bookList)
+//            Log.d("MainAct", "BookList is: $bookList")
+        }
+
         bookListView = findViewById(R.id.list) as ListView
-        var editText: EditText = findViewById(R.id.edit_text) as EditText
-        var goButton: Button = findViewById(R.id.go_button) as Button
+        val editText: EditText = findViewById(R.id.edit_text) as EditText
+        val goButton: Button = findViewById(R.id.go_button) as Button
+        loadingIndicator = findViewById(R.id.progress_loader) as ProgressBar
+        noBooksText = findViewById(R.id.no_books_text_view) as TextView
 
-        var name: String
         goButton.setOnClickListener(object : View.OnClickListener {
-
             override fun onClick(v: View?) {
-                name = editText.text.toString()
-                val isConnected = checkConnection()
-
-//                Log.d("mainactivity", "name is $name")
+                val name = editText.text.toString()
+                if (!name.isEmpty()) {
+                    loadingIndicator.visibility = View.VISIBLE
+                    bookListView.visibility = View.GONE
+                    noBooksText.visibility = View.GONE
+                    val isConnected = checkConnection()
 //                val stringUrl =
 //                    "https://www.googleapis.com/books/v1/volumes?q=inauthor:stephen%20hawking&maxResults=20"
 
-                if (isConnected) {
-                    val networkUtils = NetworkUtils()
-                    val stringUrl = getUrl(name)
-                    networkUtils.getBooksFromApi(
-                        stringUrl,
-                        Listener(WeakReference(this@MainActivity))
-                    )
-                }
-                else{
-                    Toast.makeText(this@MainActivity, "Not Connected to Internet", Toast.LENGTH_LONG).show()
+                    if (isConnected) {
+                        getUrl(name)
+//                    viewModel.getBooks("https://www.googleapis.com/books/v1/volumes?q=inauthor:stephen%20hawking&maxResults=20")
+                    } else {
+                        Toast.makeText(
+                            this@MainActivity,
+                            "Not Connected to Internet",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
                 }
             }
         })
     }
 
-    fun setAdapter(books: List<Book>) {
+    fun setAdapter(books: List<Book>?) {
+        if (books == null){
+            loadingIndicator.visibility = View.GONE
+            noBooksText.visibility = View.VISIBLE
+            bookListView.visibility = View.GONE
+            return
+        }
         val adapter1 = BookAdapter(this, 0, books)
         val bookView = findViewById<ListView>(R.id.list)
         bookView.adapter = adapter1
-    }
+        loadingIndicator.visibility = View.GONE
+        bookListView.visibility = View.VISIBLE
 
-    inner class Listener(activity: WeakReference<Activity>) : OnRequestCompleteListener{
-
-        var booki :List<Book>? = null
-        val _activity = activity
-
-        val activity1 = this@MainActivity
-
-        override fun onSuccess(books: List<Book>) {
-            if(_activity.get() != null){
-                val activity = _activity.get()!!
-
-                activity.runOnUiThread(Runnable {
-                    this.booki = books
-//                    Log.d("mainActivity", "books in listener UI thread ${this.booki}")
-                    setAdapter(booki!!)
-                });
-            }
-//            Log.d("mainActivity", "books in listener ${this.booki}")   //null
-        }
-
-        override fun onError() {
-            TODO("Not yet implemented")
-        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -116,18 +109,17 @@ class MainActivity : AppCompatActivity() {
         return connected
     }
 
-    fun getUrl(name:String) :String{
+    fun getUrl(name:String) {
 
-        var sharedPrefs: SharedPreferences =
+        val sharedPrefs: SharedPreferences =
             PreferenceManager.getDefaultSharedPreferences(
                 this@MainActivity
             )
-        var searchPref: String? = sharedPrefs.getString(
-            getString(R.string.list_pref_key), getString(
-                R.string.author_pref
-            )
+        val searchPref: String? = sharedPrefs.getString(
+            getString(R.string.list_pref_key),
+            getString(R.string.author_pref)
         )
-        var httpUrlBuilder: HttpUrl.Builder = HttpUrl.Builder()
+        val httpUrlBuilder: HttpUrl.Builder = HttpUrl.Builder()
             .scheme("https")
             .host("www.googleapis.com")
             .addPathSegment("books")
@@ -144,12 +136,13 @@ class MainActivity : AppCompatActivity() {
                 "intitle:" + name
             )
         }
-        var httpUrl: HttpUrl = httpUrlBuilder.build()
+        val httpUrl: HttpUrl = httpUrlBuilder.build()
 
-        var stringUrl = httpUrl.toString()
+        val stringUrl = httpUrl.toString()
 //                Log.d("MainActivity", "stringUrl = $stringUrl")
 
-        return stringUrl
+        viewModel.getBooks(stringUrl)
     }
+
 }
 

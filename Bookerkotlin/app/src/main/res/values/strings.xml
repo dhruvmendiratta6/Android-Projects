@@ -5,4 +5,5 @@
     <string name="list_pref_key">listPref</string>
     <string name="author_pref">Author</string>
     <string name="title_pref">Title</string>
+    <string name="go_button_text">Go</string>
 </resources>
