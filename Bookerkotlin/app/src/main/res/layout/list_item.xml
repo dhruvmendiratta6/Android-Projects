@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal">
@@ -21,10 +22,10 @@
             android:id="@+id/title_text"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:textSize="20dp"
+            android:textSize="20sp"
             android:fontFamily="sans-serif"
             android:textAlignment="center"
-            android:text="Title text"
+            tools:text="Title text"
             android:padding="2dp"/>
 
 
@@ -35,8 +36,8 @@
             android:textColor="#B4BAC0"
             android:fontFamily="sans-serif"
             android:textAlignment="center"
-            android:text="Author text"
-            android:textSize="15dp"
+            tools:text="Author text"
+            android:textSize="15sp"
             android:padding="2dp"
             android:layout_marginBottom="3dp"/>
 
@@ -49,7 +50,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="1.0"
+        tools:text="1.0"
         android:textAlignment="center"
         android:padding="8dp"/>
 

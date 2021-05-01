@@ -6,6 +6,7 @@ import android.net.ConnectivityManager
 import android.net.NetworkInfo
 import android.os.Bundle
 import android.preference.PreferenceManager
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -13,6 +14,11 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import okhttp3.HttpUrl
 import androidx.lifecycle.ViewModelProvider
+import com.example.booker_kotlin.ViewModel.BookViewModel
+import com.example.booker_kotlin.ViewModel.BookViewModelFactory
+import com.example.booker_kotlin.Database.BookDatabase
+import com.example.booker_kotlin.Database.BookDatabaseDao
+import com.example.booker_kotlin.Database.BookEntity
 
 class MainActivity : AppCompatActivity() {
     private lateinit var bookListView: ListView
@@ -21,16 +27,27 @@ class MainActivity : AppCompatActivity() {
     private lateinit var noBooksText: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
-//        TODO("make condition for BookApiServiceeModel.totalItems")
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        viewModel = ViewModelProvider(this).get(BookViewModel::class.java)
+        val application = requireNotNull(this).application
+
+        val bookDatabaseDao: BookDatabaseDao = BookDatabase.getInstance(application).bookDatabaseDao
+
+        val bookViewModelFactory = BookViewModelFactory(bookDatabaseDao, application)
+
+        viewModel = ViewModelProvider(this, bookViewModelFactory).get(BookViewModel::class.java)
+
 
         viewModel.bookList.observe(this){ bookList ->
             setAdapter(bookList)
 //            Log.d("MainAct", "BookList is: $bookList")
+            Log.d("MainActivity", "Books from MainActivity: $bookList")
+
         }
+
+//        viewModel.testFunc()
+
 
         bookListView = findViewById(R.id.list) as ListView
         val editText: EditText = findViewById(R.id.edit_text) as EditText
@@ -64,7 +81,7 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
-    fun setAdapter(books: List<Book>?) {
+    fun setAdapter(books: List<BookEntity>?) {
         if (books == null){
             loadingIndicator.visibility = View.GONE
             noBooksText.visibility = View.VISIBLE

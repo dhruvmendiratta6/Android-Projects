@@ -12,7 +12,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Bookerkotlin" >
-        <activity android:name=".SettingsActivity" >
+        <activity android:name=".SettingsActivity"
+            android:parentActivityName=".MainActivity">
+
+            <meta-data
+                android:name=".MainActivity"
+                android:value="com.example.Bookerkotlin.MainActivity" />
         </activity>
         <activity android:name=".MainActivity" >
             <intent-filter>
