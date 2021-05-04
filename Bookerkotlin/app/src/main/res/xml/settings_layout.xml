@@ -2,11 +2,10 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <ListPreference
-        android:title="Search by"
-        android:key="@string/list_pref_key"
         android:defaultValue="@string/author_pref"
         android:entries="@array/list_items"
-        android:entryValues="@array/list_values" >
-    </ListPreference>
+        android:entryValues="@array/list_values"
+        android:key="@string/list_pref_key"
+        android:title="Search by" />
 
 </PreferenceScreen>

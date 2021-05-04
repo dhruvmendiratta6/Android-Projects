@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_activity_navigation"
+    app:startDestination="@id/bookFragment2">
+    <fragment
+        android:id="@+id/bookFragment2"
+        android:name="com.example.booker_kotlin.BookFragment"
+        android:label="BookFragment" >
+        <action
+            android:id="@+id/action_bookFragment2_to_bookDetailsFragment2"
+            app:destination="@id/bookDetailsFragment"
+            app:popUpTo="@id/bookFragment2"
+            app:popUpToInclusive="false" />
+    </fragment>
+    <fragment
+        android:id="@+id/bookDetailsFragment"
+        android:name="com.example.booker_kotlin.BookDetailsFragment"
+        android:label="fragment_book_details"
+        tools:layout="@layout/fragment_book_details" >
+        <argument
+            android:name="titleText"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="authorsText"
+            app:argType="string" />
+        <argument
+            android:name="thumbnailImg"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="rating"
+            app:argType="float" />
+    </fragment>
+</navigation>

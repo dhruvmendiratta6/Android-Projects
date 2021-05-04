@@ -12,7 +12,7 @@ data class Item(
 
 data class Book(
     val title: String,
-    val authors: List<String>,
+    val authors: List<String> = listOf(""),
     @Json(name = "averageRating") val rating: Double = -1.0,
     val imageLinks: ImageLinks? = null
 )

@@ -12,9 +12,9 @@ import com.bumptech.glide.Glide
 import com.example.booker_kotlin.Database.BookEntity
 import java.text.DecimalFormat
 
-class BookAdapter(context: Context,
+class BookAdapter(context: Context?,
                   @LayoutRes private val layoutResource: Int,
-                  private val books: List<BookEntity>) : ArrayAdapter<BookEntity>(context, layoutResource, books) {
+                  private val books: List<BookEntity>) : ArrayAdapter<BookEntity>(context!!, layoutResource, books) {
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         var current_book: BookEntity? = getItem(position)
@@ -26,18 +26,18 @@ class BookAdapter(context: Context,
         var thumbNailImgView: ImageView = listItemView.findViewById(R.id.list_image)
 
         var rating : Double? = current_book?.rating
-        var textRating = "N.A"
+        var textRating = "N.A."
         if(rating != -1.0) {
             textRating = getFormattedRating(rating)
         }
         var appendedAuthors: String = ""
-        if(current_book != null){
-//            for (author in current_book.authors){
-//                appendedAuthors += author + " "
-//            }
-        }
-        else{
-            appendedAuthors = "N.A"
+//        if(current_book != null){
+////            for (author in current_book.authors){
+////                appendedAuthors += author + " "
+////            }
+//        }
+        if(current_book == null){
+            appendedAuthors = "N.A."
         }
 
         var imgUrl: String? = current_book?.thumbnailImage

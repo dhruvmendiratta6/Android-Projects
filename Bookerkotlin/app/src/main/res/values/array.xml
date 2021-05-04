@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="list_items">
-        <item>Search by Author</item>
-        <item>Search by Title</item>
+        <item>Author</item>
+        <item>Title</item>
     </string-array>
     <string-array name="list_values">
         <item>@string/author_pref</item>
