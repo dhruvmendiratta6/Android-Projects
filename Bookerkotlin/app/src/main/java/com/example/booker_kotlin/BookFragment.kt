@@ -32,7 +32,8 @@ class BookFragment : Fragment() {
     ): View? {
 
         val view: View = inflater.inflate(R.layout.fragment_book, container, false)
-        // Inflate the layout for this fragment
+
+        (activity as AppCompatActivity?)!!.supportActionBar?.title = "Booker"
 
         val application = requireNotNull(activity).application
 
